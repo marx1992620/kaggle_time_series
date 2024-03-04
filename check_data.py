@@ -1,5 +1,5 @@
-import numpy as np # linear algebra
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import numpy as np
+import pandas as pd
 import os
 import matplotlib.pyplot as plt
 
@@ -19,46 +19,58 @@ def draw(x,y):
 df = pd.read_csv("data/test/test.csv")
 print("test:",df.shape)
 print(df.head())
-print(df.isnull().sum())
+print("++++++++++++++++++++++")
+# print(df.isnull().sum())
+print(df.describe())
 print("================")
 
 
 df = pd.read_csv("data/train/train.csv")
 print("train:",df.shape)
 print(df.head())
-print(df.isnull().sum())
+print("++++++++++++++++++++++")
+# print(df.isnull().sum())
+print(df.describe())
 print("================")
 
 
 df = pd.read_csv('data/train/oil.csv')
 print("oil:",df.shape)
 print(df.head())
-print(df.isnull().sum())
-print("------------------")
-print(df[df.dcoilwtico.isnull()])
+print("++++++++++++++++++++++")
+# print(df.isnull().sum())
+print(df.describe())
+# print("------------------")
+# print(df[df.dcoilwtico.isnull()])
 print("================")
-draw(df['date'],df['dcoilwtico'])
+# draw(df['date'],df['dcoilwtico'])
 df_fill = df.fillna(method="pad")
-draw(df_fill['date'],df_fill['dcoilwtico'])
+# draw(df_fill['date'],df_fill['dcoilwtico'])
 
 
 df = pd.read_csv('data/train/stores.csv')
 print("stores:",df.shape)
 print(df.head())
-print(df.isnull().sum())
+print("++++++++++++++++++++++")
+# print(df.isnull().sum())
+print(df.describe())
 print("================")
 
 df = pd.read_csv('data/train/transactions.csv')
 print("transactions:",df.shape)
 print(df.head())
-print(df.isnull().sum())
+print("++++++++++++++++++++++")
+# print(df.isnull().sum())
+print(df.describe())
 print("================")
 
 
 df = pd.read_csv('data/train/holidays_events.csv')
 print("holidays_events:",df.shape)
 print(df.head())
-print(df.isnull().sum())
+print("++++++++++++++++++++++")
+# print(df.isnull().sum())
+print(df.describe())
 print("================")
 
 # ax=df.plot.kde()
