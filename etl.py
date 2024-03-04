@@ -1,13 +1,14 @@
-import numpy as np
+# import numpy as np
 import pandas as pd
-import os
-import matplotlib.pyplot as plt
+# import os
+# import matplotlib.pyplot as plt
 
 
-df = pd.read_csv('data/train/oil.csv')
-df_oil_fill = df.fillna(method="pad")
 
 def merge_df():
+    df = pd.read_csv('data/train/oil.csv')
+    df_oil_fill = df.fillna(method="pad")
+
     df_train = pd.read_csv("data/train/train.csv")
     df_test = pd.read_csv("data/test/test.csv")
 
@@ -43,10 +44,6 @@ def merge_df():
     return df_train_new, df_test_new
 
 
-
-print("================")
-df_train_new,df_test_new = merge_df()
-
 def check_na(df):
     print(f"length: {len(df)}")
     for i in df.columns:
@@ -68,10 +65,26 @@ def prework():
     df_train_new['store_state'] = pd.factorize(df_train_new['store_state'])[0].astype(int)
     df_train_new['store_type'] = pd.factorize(df_train_new['store_type'])[0].astype(int)
 
-prework()
-print("----------- df_train_new -----------")
-check_na(df_train_new)
-print("----------- df_test_new ------------")
-check_na(df_test_new)
+    df_test_new.drop_duplicates(subset='id',keep='first',inplace=True)
+    df_test_new.dropna(axis=0,inplace=True)
+    df_test_new['date'] = df_test_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
+    df_test_new['family'] = pd.factorize(df_test_new['family'])[0].astype(int)
+    df_test_new['Daily_holiday_type'] = pd.factorize(df_test_new['Daily_holiday_type'])[0].astype(int)
+    df_test_new['Daily_holiday_locale'] = pd.factorize(df_test_new['Daily_holiday_locale'])[0].astype(int)
+    df_test_new['Daily_holiday_locale_name'] = pd.factorize(df_test_new['Daily_holiday_locale_name'])[0].astype(int)
+    df_test_new['Daily_holiday_description'] = pd.factorize(df_test_new['Daily_holiday_description'])[0].astype(int)
+    df_test_new['Daily_holiday_transferred'] = pd.factorize(df_test_new['Daily_holiday_transferred'])[0].astype(int)
+    df_test_new['store_city'] = pd.factorize(df_test_new['store_city'])[0].astype(int)
+    df_test_new['store_state'] = pd.factorize(df_test_new['store_state'])[0].astype(int)
+    df_test_new['store_type'] = pd.factorize(df_test_new['store_type'])[0].astype(int)
 
 
+if __name__ == "__main__":
+    print("======== start ========")
+    df_train_new,df_test_new = merge_df()
+    prework()
+    # print("----------- df_train_new -----------")
+    # check_na(df_train_new)
+    # print("----------- df_test_new ------------")
+    # check_na(df_test_new)
+    print("done!")
