@@ -44,11 +44,13 @@ if __name__ == "__main__":
     x_feature = ['id','date','store_nbr','family','onpromotion','Daily_holiday_type','Daily_holiday_locale','Daily_holiday_locale_name','Daily_holiday_description','Daily_holiday_transferred',
               'dcoilwtico','store_city','store_state','store_type','store_cluster','transactions']
     y_feature = 'sales'
-    prework()
-    # print("----------- df_train_new -----------")
-    # check_na(df_train_new)
-    # print("----------- df_test_new ------------")
-    # check_na(df_test_new)
+    df_train_new2 , df_test_new2 = prework(df_train_new,df_test_new)
+    print(f"df_train_new2 shape: {df_train_new2.shape} , df_test_new2 shape: {df_test_new2.shape}")
+    print("----------- df_train_new -----------")
+    check_na(df_train_new2)
+    print("----------- df_test_new ------------")
+    check_na(df_test_new2)
     build_random_forest(x_feature,y_feature,df_train_new)
+    print("------ forcasting ------")
     Forecast(x_feature,y_feature)
     print("done!")

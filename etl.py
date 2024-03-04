@@ -51,7 +51,7 @@ def check_na(df):
         print(f"Name: {i} Rate: {100*a['count']/len(df[i])}")
 
 
-def prework():
+def prework(df_train_new,df_test_new):
     df_train_new.drop_duplicates(subset='id',keep='first',inplace=True)
     df_train_new.dropna(axis=0,inplace=True)
     df_train_new['date'] = df_train_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
@@ -78,11 +78,13 @@ def prework():
     df_test_new['store_state'] = pd.factorize(df_test_new['store_state'])[0].astype(int)
     df_test_new['store_type'] = pd.factorize(df_test_new['store_type'])[0].astype(int)
 
+    return df_train_new, df_test_new
+
 
 if __name__ == "__main__":
     print("======== start ========")
     df_train_new,df_test_new = merge_df()
-    prework()
+    df_train_new,df_test_new = prework(df_train_new,df_test_new)
     # print("----------- df_train_new -----------")
     # check_na(df_train_new)
     # print("----------- df_test_new ------------")
