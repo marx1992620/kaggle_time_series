@@ -7,10 +7,32 @@ import pandas as pd
 
 def merge_df():
     df = pd.read_csv('data/train/oil.csv')
-    df_oil_fill = df.fillna(method="pad")
+    df_oil_fill = df.fillna(method="backfill")
 
     df_train = pd.read_csv("data/train/train.csv")
     df_test = pd.read_csv("data/test/test.csv")
+
+    # min_date = df_train['date'].min()
+    # max_date = df_train['date'].max()
+    # expected_dates = pd.date_range(start=min_date, end=max_date)
+    # missing_dates = expected_dates[~expected_dates.isin(df_train['date'])]
+    # if len(missing_dates) == 0:
+    #     print("The train dataset is complete. It includes all the required dates.")
+    # else:
+    #     print("The train dataset is incomplete. The following dates are missing:")
+    #     print(missing_dates)
+
+    # # Complete the missing dates in the train dataset
+    # # Create an index of the missing dates as a DatetimeIndex object
+    # missing_dates = pd.Index(['2013-12-25', '2014-12-25', '2015-12-25', '2016-12-25'], dtype='datetime64[ns]')
+    # # Create a DataFrame with the missing dates, using the 'date' column
+    # missing_data = pd.DataFrame({'date': missing_dates})
+    # # Concatenate the original train dataset and the missing data DataFrame
+    # # ignore_index=True ensures a new index is assigned to the resulting DataFrame
+    # df_train = pd.concat([df_train, missing_data], ignore_index=True)
+    # # Sort the DataFrame based on the 'date' column in ascending order
+    # df_train.sort_values('date', inplace=True)
+
 
     df_holidays_events = pd.read_csv("data/train/holidays_events.csv")
     df_holidays_events.rename(columns={'date':'date',
@@ -31,15 +53,15 @@ def merge_df():
     df_transactions = pd.read_csv("data/train/transactions.csv")
     df_transactions.rename(columns={'transactions':'Daily_transactions'})
 
-    df_train_new = pd.merge(df_train,df_holidays_events,how='left',left_on='date',right_on='date')
-    df_train_new = pd.merge(df_train_new,df_oil_fill,how='left',left_on='date',right_on='date')
-    df_train_new = pd.merge(df_train_new,df_stores,how='left',left_on='store_nbr',right_on='store_nbr')
-    df_train_new = pd.merge(df_train_new,df_transactions,how='left',on=['date','store_nbr'])
+    df_train_new = pd.merge(df_train,df_holidays_events,how='inner',on='date')
+    df_train_new = pd.merge(df_train_new,df_oil_fill,how='inner',on='date')
+    df_train_new = pd.merge(df_train_new,df_stores,how='inner',on='store_nbr')
+    df_train_new = pd.merge(df_train_new,df_transactions,how='inner',on=['date','store_nbr'])
 
-    df_test_new = pd.merge(df_test,df_holidays_events,how='left',left_on='date',right_on='date')
-    df_test_new = pd.merge(df_test_new,df_oil_fill,how='left',left_on='date',right_on='date')
-    df_test_new = pd.merge(df_test_new,df_stores,how='left',left_on='store_nbr',right_on='store_nbr')
-    df_test_new = pd.merge(df_test_new,df_transactions,how='left',on=['date','store_nbr'])
+    df_test_new = pd.merge(df_test,df_holidays_events,how='inner',left_on='date',right_on='date')
+    df_test_new = pd.merge(df_test_new,df_oil_fill,how='inner',left_on='date',right_on='date')
+    df_test_new = pd.merge(df_test_new,df_stores,how='inner',left_on='store_nbr',right_on='store_nbr')
+    df_test_new = pd.merge(df_test_new,df_transactions,how='inner',on=['date','store_nbr'])
 
     return df_train_new, df_test_new
 

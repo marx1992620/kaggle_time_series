@@ -16,15 +16,6 @@ def build_random_forest(x_data,y_data,data_frame):
     print(f"mean_absolute_error delta: {delta}")
 
 
-def Forecast():
-    model = RandomForestRegressor(random_state=1,max_depth=100)
-    model.fit(df_train_new(x),df_train_new(y))
-    aim = df_test_new(x)
-    predictions = model.predict(aim)
-    res = pd.DataFrame(predictions)
-    path = './submission.csv'
-    res.to_csv(path)
-
 
 def Forecast(x_feature,y_feature):
     model = RandomForestRegressor(random_state=1,max_depth=100)
@@ -50,7 +41,10 @@ if __name__ == "__main__":
     check_na(df_train_new2)
     print("----------- df_test_new ------------")
     check_na(df_test_new2)
-    build_random_forest(x_feature,y_feature,df_train_new)
-    print("------ forcasting ------")
-    Forecast(x_feature,y_feature)
+    print(df_test_new2.isnull().sum())
+    print(df_test_new2.head())
+
+    # build_random_forest(x_feature,y_feature,df_train_new)
+    # print("------ forcasting ------")
+    # Forecast(x_feature,y_feature)
     print("done!")
