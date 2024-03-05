@@ -1,0 +1,166 @@
+data/train\holidays_events.csv
+data/train\oil.csv
+data/train\sample_submission.csv
+data/train\stores.csv
+data/train\train.csv
+data/train\transactions.csv
+
+test: (28512, 5)
+        id        date  store_nbr      family  onpromotion
+0  3000888  2017-08-16          1  AUTOMOTIVE            0
+1  3000889  2017-08-16          1   BABY CARE            0
+2  3000890  2017-08-16          1      BEAUTY            2
+3  3000891  2017-08-16          1   BEVERAGES           20
+4  3000892  2017-08-16          1       BOOKS            0
+++++++++++++++++++++++
+                 id     store_nbr   onpromotion
+count  2.851200e+04  28512.000000  28512.000000
+mean   3.015144e+06     27.500000      6.965383
+std    8.230850e+03     15.586057     20.683952
+min    3.000888e+06      1.000000      0.000000
+25%    3.008016e+06     14.000000      0.000000
+50%    3.015144e+06     27.500000      0.000000
+75%    3.022271e+06     41.000000      6.000000
+max    3.029399e+06     54.000000    646.000000
+================
+
+train: (3000888, 6)
+   id        date  store_nbr      family  sales  onpromotion
+0   0  2013-01-01          1  AUTOMOTIVE    0.0            0
+1   1  2013-01-01          1   BABY CARE    0.0            0
+2   2  2013-01-01          1      BEAUTY    0.0            0
+3   3  2013-01-01          1   BEVERAGES    0.0            0
+4   4  2013-01-01          1       BOOKS    0.0            0
+++++++++++++++++++++++
+                 id     store_nbr         sales   onpromotion
+count  3.000888e+06  3.000888e+06  3.000888e+06  3.000888e+06
+mean   1.500444e+06  2.750000e+01  3.577757e+02  2.602770e+00
+std    8.662819e+05  1.558579e+01  1.101998e+03  1.221888e+01
+min    0.000000e+00  1.000000e+00  0.000000e+00  0.000000e+00
+25%    7.502218e+05  1.400000e+01  0.000000e+00  0.000000e+00
+50%    1.500444e+06  2.750000e+01  1.100000e+01  0.000000e+00
+75%    2.250665e+06  4.100000e+01  1.958473e+02  0.000000e+00
+max    3.000887e+06  5.400000e+01  1.247170e+05  7.410000e+02
+================
+
+oil: (1218, 2)
+         date  dcoilwtico
+0  2013-01-01         NaN
+1  2013-01-02       93.14
+2  2013-01-03       92.97
+3  2013-01-04       93.12
+4  2013-01-07       93.20
+++++++++++++++++++++++
+        dcoilwtico
+count  1175.000000
+mean     67.714366
+std      25.630476
+min      26.190000
+25%      46.405000
+50%      53.190000
+75%      95.660000
+max     110.620000
+================
+
+stores: (54, 5)
+   store_nbr           city                           state type  cluster
+0          1          Quito                       Pichincha    D       13
+1          2          Quito                       Pichincha    D       13
+2          3          Quito                       Pichincha    D        8
+3          4          Quito                       Pichincha    D        9
+4          5  Santo Domingo  Santo Domingo de los Tsachilas    D        4
+++++++++++++++++++++++
+       store_nbr    cluster
+count  54.000000  54.000000
+mean   27.500000   8.481481
+std    15.732133   4.693395
+min     1.000000   1.000000
+25%    14.250000   4.000000
+50%    27.500000   8.500000
+75%    40.750000  13.000000
+max    54.000000  17.000000
+================
+
+transactions: (83488, 3)
+         date  store_nbr  transactions
+0  2013-01-01         25           770
+1  2013-01-02          1          2111
+2  2013-01-02          2          2358
+3  2013-01-02          3          3487
+4  2013-01-02          4          1922
+++++++++++++++++++++++
+          store_nbr  transactions
+count  83488.000000  83488.000000
+mean      26.939237   1694.602158
+std       15.608204    963.286644
+min        1.000000      5.000000
+25%       13.000000   1046.000000
+50%       27.000000   1393.000000
+75%       40.000000   2079.000000
+max       54.000000   8359.000000
+================
+
+holidays_events: (350, 6)
+         date     type    locale locale_name                    description  transferred
+0  2012-03-02  Holiday     Local       Manta             Fundacion de Manta        False
+1  2012-04-01  Holiday  Regional    Cotopaxi  Provincializacion de Cotopaxi        False
+2  2012-04-12  Holiday     Local      Cuenca            Fundacion de Cuenca        False
+3  2012-04-14  Holiday     Local    Libertad      Cantonizacion de Libertad        False
+4  2012-04-21  Holiday     Local    Riobamba      Cantonizacion de Riobamba        False
+++++++++++++++++++++++
+              date     type    locale locale_name description transferred
+count          350      350       350         350         350         350
+unique         312        6         3          24         103           2
+top     2014-06-25  Holiday  National     Ecuador    Carnaval       False
+freq             4      221       174         174          10         338
+
+
+----------- df_train_new -----------
+length: 3054348
+Name: id Rate: 100.0
+Name: date Rate: 100.0
+Name: store_nbr Rate: 100.0
+Name: family Rate: 100.0
+Name: sales Rate: 100.0
+Name: onpromotion Rate: 100.0
+Name: Daily_holiday_type Rate: 16.45274212368728
+Name: Daily_holiday_locale Rate: 16.45274212368728
+Name: Daily_holiday_locale_name Rate: 16.45274212368728
+Name: Daily_holiday_description Rate: 16.45274212368728
+Name: Daily_holiday_transferred Rate: 16.45274212368728
+Name: dcoilwtico Rate: 71.17852975495916
+Name: store_city Rate: 100.0
+Name: store_state Rate: 100.0
+Name: store_type Rate: 100.0
+Name: store_cluster Rate: 100.0
+Name: transactions Rate: 91.84385669216475
+----------- df_test_new ------------
+length: 28512
+Name: id Rate: 100.0
+Name: date Rate: 100.0
+Name: store_nbr Rate: 100.0
+Name: family Rate: 100.0
+Name: onpromotion Rate: 100.0
+Name: Daily_holiday_type Rate: 6.25
+Name: Daily_holiday_locale Rate: 6.25
+Name: Daily_holiday_locale_name Rate: 6.25
+Name: Daily_holiday_description Rate: 6.25
+Name: Daily_holiday_transferred Rate: 6.25
+Name: dcoilwtico Rate: 75.0
+Name: store_city Rate: 100.0
+Name: store_state Rate: 100.0
+Name: store_type Rate: 100.0
+Name: store_cluster Rate: 100.0
+Name: transactions Rate: 0.0
+
+
+
+The train dataset is incomplete. The following dates are missing:
+DatetimeIndex(['2013-01-05', '2013-01-06', '2013-01-12', '2013-01-13',
+               '2013-01-19', '2013-01-20', '2013-01-26', '2013-01-27',
+               '2013-02-02', '2013-02-03',
+               ...
+               '2017-07-29', '2017-07-30', '2017-08-05', '2017-08-06',
+               '2017-08-12', '2017-08-13', '2017-08-19', '2017-08-20',
+               '2017-08-26', '2017-08-27'],
+              dtype='datetime64[ns]', length=486, freq=None)
