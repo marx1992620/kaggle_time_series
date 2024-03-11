@@ -128,9 +128,9 @@ if __name__ == "__main__":
     sub = linear_model.predict(filter_test_data)
     print(len(sub))
 
-    # sample_submission['sales'] = sub
-    res = pd.DataFrame(sub)
-    res.to_csv('./submession.csv')
+    sample_submission = pd.read_csv("data/test/test.csv")
+    sample_submission['sales'] = sub
+    sample_submission.to_csv('./submession.csv')
 
     print("\nBuild model\n")
 
