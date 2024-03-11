@@ -126,11 +126,11 @@ if __name__ == "__main__":
     print("Valid RMSLE:", mean_squared_log_error(predictions,y_test)**0.5)
 
     sub = linear_model.predict(filter_test_data)
-    print(sub)
-    sample_submission = test_data
-    sample_submission['sales'] = sub
-    sample_submission.to_csv('./submession.csv')
+    print(len(sub))
 
+    # sample_submission['sales'] = sub
+    res = pd.DataFrame(sub)
+    res.to_csv('./submession.csv')
 
     print("\nBuild model\n")
 
