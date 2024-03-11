@@ -125,12 +125,15 @@ if __name__ == "__main__":
     # estimate the RMSLE of prediction
     print("Valid RMSLE:", mean_squared_log_error(predictions,y_test)**0.5)
 
-    sub = linear_model.predict(filter_test_data)
-    print(len(sub))
+    res = linear_model.predict(filter_test_data)
+    print(len(res))
 
     sample_submission = pd.read_csv("data/test/test.csv")
-    sample_submission['sales'] = sub
-    sample_submission.to_csv('./submession.csv')
+    sample_submission = sample_submission.drop(columns=['date','store_nbr','family','onpromotion'])
+    print(sample_submission.shape)
+    print(sample_submission.head())
+    sample_submission['sales'] = res
+    sample_submission.to_csv('./submession.csv',index=False)
 
     print("\nBuild model\n")
 
