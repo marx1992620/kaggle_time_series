@@ -133,7 +133,7 @@ if __name__ == "__main__":
     print(sample_submission.shape)
     print(sample_submission.head())
     sample_submission['sales'] = res
-    sample_submission.to_csv('./submession.csv',index=False)
+    sample_submission.to_csv('./submission.csv',index=False)
 
     print("\nBuild model\n")
 
