@@ -1,12 +1,19 @@
 # import numpy as np
 import pandas as pd
 # import os
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
+def draw(x,y):
+    fig = plt.figure()
+    axes = fig.add_subplot(1,1,1)
+    axes.plot(x,y)
+    plt.show()
 
 
 def merge_df():
     df = pd.read_csv('data/train/oil.csv')
+    # print(df.isna().sum())
+    # draw(df['date'],df['dcoilwtico'])
     df_oil_fill = df.fillna(method="backfill")
 
     df_train = pd.read_csv("data/train/train.csv")
@@ -32,8 +39,6 @@ def merge_df():
     # df_train = pd.concat([df_train, missing_data], ignore_index=True)
     # # Sort the DataFrame based on the 'date' column in ascending order
     # df_train.sort_values('date', inplace=True)
-
-
     df_holidays_events = pd.read_csv("data/train/holidays_events.csv")
     df_holidays_events.rename(columns={'date':'date',
                              'type':'Daily_holiday_type',
@@ -53,15 +58,41 @@ def merge_df():
     df_transactions = pd.read_csv("data/train/transactions.csv")
     df_transactions.rename(columns={'transactions':'Daily_transactions'})
 
-    df_train_new = pd.merge(df_train,df_holidays_events,how='inner',on='date')
-    df_train_new = pd.merge(df_train_new,df_oil_fill,how='inner',on='date')
-    df_train_new = pd.merge(df_train_new,df_stores,how='inner',on='store_nbr')
-    df_train_new = pd.merge(df_train_new,df_transactions,how='inner',on=['date','store_nbr'])
+    # train data
+    df_train_new = pd.merge(df_train,df_oil_fill,how='left',on='date')
+    # draw(df_train_new['date'],df_train_new['dcoilwtico'])
+    df_train_new = df_train_new.fillna(method='pad')
+    # draw(df_train_new['date'],df_train_new['dcoilwtico'])
+    df_train_new = pd.merge(df_train_new,df_holidays_events,how='left',on='date')
+    # print(df_train_new.isna().sum())
+    df_train_new = df_train_new.fillna("Empty")
+    # print(df_train_new.isna().sum())
+    # df_train_new.info(show_counts=True)
+    df_train_new = pd.merge(df_train_new,df_stores,how='left',on='store_nbr')
+    # print(df_train_new.isna().sum())
+    df_train_new = pd.merge(df_train_new,df_transactions,how='left',on=['date','store_nbr'])
+    # print(df_train_new.isna().sum())
+    df_train_new['transactions'] = df_train_new['transactions'].fillna(0)
+    # print(df_train_new.isna().sum())
+    df_train_new['date'] = df_train_new['date'].astype('datetime64[ns]')
+    # df_train_new['date'].dtype
+    print(df_train_new.isna().sum())
+    df_train_new.head()
 
-    df_test_new = pd.merge(df_test,df_holidays_events,how='inner',left_on='date',right_on='date')
-    df_test_new = pd.merge(df_test_new,df_oil_fill,how='inner',left_on='date',right_on='date')
-    df_test_new = pd.merge(df_test_new,df_stores,how='inner',left_on='store_nbr',right_on='store_nbr')
-    df_test_new = pd.merge(df_test_new,df_transactions,how='inner',on=['date','store_nbr'])
+    # test data
+    df_test_new = pd.merge(df_test,df_oil_fill,how='left',on='date')
+    # print(df_test_new.isna().sum())
+    # draw(df_test_new['date'],df_test_new['dcoilwtico'])
+    df_test_new = df_test_new.fillna(method='backfill')
+    # draw(df_test_new['date'],df_test_new['dcoilwtico'])
+    # print(df_test_new.isna().sum())
+    df_test_new = pd.merge(df_test_new,df_holidays_events,how='left',on='date')
+    df_test_new = df_test_new.fillna("Empty")
+    print(df_test_new.isna().sum())
+    df_test_new = pd.merge(df_test_new,df_oil_fill,how='left',left_on='date',right_on='date')
+    df_test_new = pd.merge(df_test_new,df_stores,how='left',left_on='store_nbr',right_on='store_nbr')
+    df_test_new = pd.merge(df_test_new,df_transactions,how='left',on=['date','store_nbr'])
+    df_test_new['date'] = df_test_new['date'].astype('datetime64[ns]')
 
     return df_train_new, df_test_new
 
@@ -76,7 +107,7 @@ def check_na(df):
 def prework(df_train_new,df_test_new):
     df_train_new.drop_duplicates(subset='id',keep='first',inplace=True)
     df_train_new.dropna(axis=0,inplace=True)
-    df_train_new['date'] = df_train_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
+    # df_train_new['date'] = df_train_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
     df_train_new['family'] = pd.factorize(df_train_new['family'])[0].astype(int)
     df_train_new['Daily_holiday_type'] = pd.factorize(df_train_new['Daily_holiday_type'])[0].astype(int)
     df_train_new['Daily_holiday_locale'] = pd.factorize(df_train_new['Daily_holiday_locale'])[0].astype(int)
@@ -89,7 +120,7 @@ def prework(df_train_new,df_test_new):
 
     df_test_new.drop_duplicates(subset='id',keep='first',inplace=True)
     # df_test_new.dropna(axis=0,inplace=True)
-    df_test_new['date'] = df_test_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
+    # df_test_new['date'] = df_test_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
     df_test_new['family'] = pd.factorize(df_test_new['family'])[0].astype(int)
     df_test_new['Daily_holiday_type'] = pd.factorize(df_test_new['Daily_holiday_type'])[0].astype(int)
     df_test_new['Daily_holiday_locale'] = pd.factorize(df_test_new['Daily_holiday_locale'])[0].astype(int)
