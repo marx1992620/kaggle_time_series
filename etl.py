@@ -76,10 +76,12 @@ def merge_df():
     # print(df_train_new.isna().sum())
     df_train_new['date'] = df_train_new['date'].astype('datetime64[ns]')
     # df_train_new['date'].dtype
+    print("="*10,"train data","="*10)
     print(df_train_new.isna().sum())
     df_train_new.head()
 
     # test data
+    print("="*10,"test data","="*10)
     df_test_new = pd.merge(df_test,df_oil_fill,how='left',on='date')
     # print(df_test_new.isna().sum())
     # draw(df_test_new['date'],df_test_new['dcoilwtico'])
@@ -88,11 +90,12 @@ def merge_df():
     # print(df_test_new.isna().sum())
     df_test_new = pd.merge(df_test_new,df_holidays_events,how='left',on='date')
     df_test_new = df_test_new.fillna("Empty")
-    print(df_test_new.isna().sum())
-    df_test_new = pd.merge(df_test_new,df_oil_fill,how='left',left_on='date',right_on='date')
+    
     df_test_new = pd.merge(df_test_new,df_stores,how='left',left_on='store_nbr',right_on='store_nbr')
     df_test_new = pd.merge(df_test_new,df_transactions,how='left',on=['date','store_nbr'])
+    df_test_new['transactions'] = df_test_new['transactions'].fillna(0)
     df_test_new['date'] = df_test_new['date'].astype('datetime64[ns]')
+    print(df_test_new.isna().sum())
 
     return df_train_new, df_test_new
 
@@ -105,8 +108,8 @@ def check_na(df):
 
 
 def prework(df_train_new,df_test_new):
-    df_train_new.drop_duplicates(subset='id',keep='first',inplace=True)
-    df_train_new.dropna(axis=0,inplace=True)
+    # df_train_new.drop_duplicates(subset='id',keep='first',inplace=True)
+    # df_train_new.dropna(axis=0,inplace=True)
     # df_train_new['date'] = df_train_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
     df_train_new['family'] = pd.factorize(df_train_new['family'])[0].astype(int)
     df_train_new['Daily_holiday_type'] = pd.factorize(df_train_new['Daily_holiday_type'])[0].astype(int)
@@ -118,7 +121,7 @@ def prework(df_train_new,df_test_new):
     df_train_new['store_state'] = pd.factorize(df_train_new['store_state'])[0].astype(int)
     df_train_new['store_type'] = pd.factorize(df_train_new['store_type'])[0].astype(int)
 
-    df_test_new.drop_duplicates(subset='id',keep='first',inplace=True)
+    # df_test_new.drop_duplicates(subset='id',keep='first',inplace=True)
     # df_test_new.dropna(axis=0,inplace=True)
     # df_test_new['date'] = df_test_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
     df_test_new['family'] = pd.factorize(df_test_new['family'])[0].astype(int)
@@ -135,11 +138,11 @@ def prework(df_train_new,df_test_new):
 
 
 if __name__ == "__main__":
-    print("======== start ========")
+    print(f"{'='*10} start {'='*10}")
     df_train_new,df_test_new = merge_df()
     df_train_new,df_test_new = prework(df_train_new,df_test_new)
-    # print("----------- df_train_new -----------")
-    # check_na(df_train_new)
-    # print("----------- df_test_new ------------")
-    # check_na(df_test_new)
+    print(f"{'-'*10} df_train_new {'-'*10}")
+    check_na(df_train_new)
+    print(f"{'-'*10} df_test_new {'-'*10}")
+    check_na(df_test_new)
     print("done!")
