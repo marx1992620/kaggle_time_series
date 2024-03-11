@@ -132,6 +132,7 @@ if __name__ == "__main__":
     sample_submission = sample_submission.drop(columns=['date','store_nbr','family','onpromotion'])
     print(sample_submission.shape)
     print(sample_submission.head())
+    res = [ i if i>0 else 0 for i in res]
     sample_submission['sales'] = res
     sample_submission.to_csv('./submission.csv',index=False)
 
