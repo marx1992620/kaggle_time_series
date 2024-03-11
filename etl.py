@@ -40,23 +40,12 @@ def merge_df():
     # # Sort the DataFrame based on the 'date' column in ascending order
     # df_train.sort_values('date', inplace=True)
     df_holidays_events = pd.read_csv("data/train/holidays_events.csv")
-    df_holidays_events.rename(columns={'date':'date',
-                             'type':'Daily_holiday_type',
-                             'locale':'Daily_holiday_locale',
-                             'locale_name':'Daily_holiday_locale_name',
-                             'description':'Daily_holiday_description',
-                             'transferred':'Daily_holiday_transferred'},
-                             inplace=True)
+    df_holidays_events.rename(columns={'type':'holiday_type'},inplace=True)
 
     df_stores = pd.read_csv("data/train/stores.csv")
-    df_stores.rename(columns={'store_nbr':'store_nbr',
-                             'city':'store_city',
-                             'state':'store_state',
-                             'type':'store_type',
-                             'cluster':'store_cluster'},
-                             inplace=True)
+    df_stores.rename(columns={'type':'store_type'},inplace=True)
     df_transactions = pd.read_csv("data/train/transactions.csv")
-    df_transactions.rename(columns={'transactions':'Daily_transactions'})
+    # df_transactions.rename(columns={'transactions':'Daily_transactions'})
 
     # train data
     df_train_new = pd.merge(df_train,df_oil_fill,how='left',on='date')
@@ -75,7 +64,7 @@ def merge_df():
     df_train_new['transactions'] = df_train_new['transactions'].fillna(0)
     # print(df_train_new.isna().sum())
     df_train_new['date'] = df_train_new['date'].astype('datetime64[ns]')
-    # df_train_new['date'].dtype
+    df_train_new['date'].dtype
     print("="*10,"train data","="*10)
     print(df_train_new.isna().sum())
     df_train_new.head()
@@ -95,6 +84,7 @@ def merge_df():
     df_test_new = pd.merge(df_test_new,df_transactions,how='left',on=['date','store_nbr'])
     df_test_new['transactions'] = df_test_new['transactions'].fillna(0)
     df_test_new['date'] = df_test_new['date'].astype('datetime64[ns]')
+    df_test_new['date'].dtype
     print(df_test_new.isna().sum())
 
     return df_train_new, df_test_new
@@ -107,31 +97,53 @@ def check_na(df):
         print(f"Name: {i} Rate: {100*a['count']/len(df[i])}")
 
 
+def split_date(df):
+    df['year'] = df['date'].dt.year
+    df['month'] = df['date'].dt.month
+    df['day'] = df['date'].dt.day
+    df['weekday'] = df['date'].dt.weekday
+    df.loc[df['weekday'] < 5,'weekend'] = 0
+    df.loc[df['weekday'] >= 5,'weekend'] = 1
+    return df
+
+
+def holiday(df):
+    df['is_holiday'] = 0
+    df.loc[df.weekday > 4 , 'is_holiday'] = 1
+    df.loc[df['holiday_type'] == 'Work Day', 'is_holiday'] = 0
+    df.loc[df['holiday_type'] == 'Transfer', 'is_holiday'] = 1
+    df.loc[df['holiday_type'] == 'Bridge', 'is_holiday'] = 1
+    df.loc[(df['holiday_type'] == 'Holiday') & (df.transferred == False), 'is_holiday'] = 1
+    df.loc[(df['holiday_type'] == 'Holiday') & (df.transferred == True), 'is_holiday'] = 0
+    df = df.drop(columns=['holiday_type','description','transferred'])
+    return df
+
 def prework(df_train_new,df_test_new):
     # df_train_new.drop_duplicates(subset='id',keep='first',inplace=True)
     # df_train_new.dropna(axis=0,inplace=True)
     # df_train_new['date'] = df_train_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
+
     df_train_new['family'] = pd.factorize(df_train_new['family'])[0].astype(int)
-    df_train_new['Daily_holiday_type'] = pd.factorize(df_train_new['Daily_holiday_type'])[0].astype(int)
-    df_train_new['Daily_holiday_locale'] = pd.factorize(df_train_new['Daily_holiday_locale'])[0].astype(int)
-    df_train_new['Daily_holiday_locale_name'] = pd.factorize(df_train_new['Daily_holiday_locale_name'])[0].astype(int)
-    df_train_new['Daily_holiday_description'] = pd.factorize(df_train_new['Daily_holiday_description'])[0].astype(int)
-    df_train_new['Daily_holiday_transferred'] = pd.factorize(df_train_new['Daily_holiday_transferred'])[0].astype(int)
-    df_train_new['store_city'] = pd.factorize(df_train_new['store_city'])[0].astype(int)
-    df_train_new['store_state'] = pd.factorize(df_train_new['store_state'])[0].astype(int)
+    df_train_new['holiday_type'] = pd.factorize(df_train_new['holiday_type'])[0].astype(int)
+    df_train_new['locale'] = pd.factorize(df_train_new['locale'])[0].astype(int)
+    df_train_new['locale_name'] = pd.factorize(df_train_new['locale_name'])[0].astype(int)
+    df_train_new['description'] = pd.factorize(df_train_new['description'])[0].astype(int)
+    df_train_new['transferred'] = pd.factorize(df_train_new['transferred'])[0].astype(int)
+    df_train_new['city'] = pd.factorize(df_train_new['city'])[0].astype(int)
+    df_train_new['state'] = pd.factorize(df_train_new['state'])[0].astype(int)
     df_train_new['store_type'] = pd.factorize(df_train_new['store_type'])[0].astype(int)
 
     # df_test_new.drop_duplicates(subset='id',keep='first',inplace=True)
     # df_test_new.dropna(axis=0,inplace=True)
     # df_test_new['date'] = df_test_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
     df_test_new['family'] = pd.factorize(df_test_new['family'])[0].astype(int)
-    df_test_new['Daily_holiday_type'] = pd.factorize(df_test_new['Daily_holiday_type'])[0].astype(int)
-    df_test_new['Daily_holiday_locale'] = pd.factorize(df_test_new['Daily_holiday_locale'])[0].astype(int)
-    df_test_new['Daily_holiday_locale_name'] = pd.factorize(df_test_new['Daily_holiday_locale_name'])[0].astype(int)
-    df_test_new['Daily_holiday_description'] = pd.factorize(df_test_new['Daily_holiday_description'])[0].astype(int)
-    df_test_new['Daily_holiday_transferred'] = pd.factorize(df_test_new['Daily_holiday_transferred'])[0].astype(int)
-    df_test_new['store_city'] = pd.factorize(df_test_new['store_city'])[0].astype(int)
-    df_test_new['store_state'] = pd.factorize(df_test_new['store_state'])[0].astype(int)
+    df_test_new['holiday_type'] = pd.factorize(df_test_new['holiday_type'])[0].astype(int)
+    df_test_new['locale'] = pd.factorize(df_test_new['locale'])[0].astype(int)
+    df_test_new['locale_name'] = pd.factorize(df_test_new['locale_name'])[0].astype(int)
+    df_test_new['description'] = pd.factorize(df_test_new['description'])[0].astype(int)
+    df_test_new['transferred'] = pd.factorize(df_test_new['transferred'])[0].astype(int)
+    df_test_new['city'] = pd.factorize(df_test_new['city'])[0].astype(int)
+    df_test_new['state'] = pd.factorize(df_test_new['state'])[0].astype(int)
     df_test_new['store_type'] = pd.factorize(df_test_new['store_type'])[0].astype(int)
 
     return df_train_new, df_test_new
