@@ -148,3 +148,10 @@ family         0
 onpromotion    0
 dtype: int64
 
+ADF Test Statistics: -43.83462371280052
+P-value: 0.0
+Critical Values:
+   1%: -3.4303703113855613
+   5%: -2.8615489773824025
+   10%: -2.566774778334627
+Reject the null hypothesis: The sales data is stationary.
