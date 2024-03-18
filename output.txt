@@ -155,3 +155,23 @@ Critical Values:
    5%: -2.8615489773824025
    10%: -2.566774778334627
 Reject the null hypothesis: The sales data is stationary.
+
+# feature engineering
+        id       date  store_nbr            family  sales  onpromotion   city      state store_type  cluster  transactions holiday_type    locale locale_name description  transferred  dcoilwtico  year  month  day
+0  73062.0 2013-02-11        1.0        AUTOMOTIVE    0.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01  2013      2   11
+1  73085.0 2013-02-11        1.0         MAGAZINES    0.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01  2013      2   11      
+2  73084.0 2013-02-11        1.0  LIQUOR,WINE,BEER   21.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01  2013      2   11      
+3  73083.0 2013-02-11        1.0          LINGERIE    0.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01  2013      2   11      
+4  73082.0 2013-02-11        1.0   LAWN AND GARDEN    3.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01  2013      2   11      
+
+# one_hot_encoding
+   store_nbr     sales  onpromotion  cluster  transactions  dcoilwtico  ...  city_Santo Domingo  holiday_type_Additional  holiday_type_Bridge  holiday_type_Event  holiday_type_Holiday  holiday_type_Transfer
+0        1.0 -0.325920          0.0       13     -1.273993    1.342694  ...                 0.0                      0.0                  0.0                 0.0                   1.0                    0.0
+1        1.0 -0.325920          0.0       13     -1.273993    1.342694  ...                 0.0                      0.0                  0.0                 0.0                   1.0                    0.0
+2        1.0 -0.309078          0.0       13     -1.273993    1.342694  ...                 0.0                      0.0                  0.0                 0.0                   1.0                    0.0
+3        1.0 -0.325920          0.0       13     -1.273993    1.342694  ...                 0.0                      0.0                  0.0                 0.0                   1.0                    0.0
+4        1.0 -0.323514          0.0       13     -1.273993    1.342694  ...                 0.0                      0.0                  0.0                 0.0                   1.0                    0.0
+
+# LinearRegression
+               Model  RMSLE  RMSE   MSE   MAE
+0  Linear Regression   0.27  0.84  0.71  0.37

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
@@ -6,6 +7,10 @@ import seaborn as sns
 from statsmodels.tsa.stattools import adfuller
 from scipy.stats import ttest_ind
 from sklearn.metrics import mean_squared_error, mean_absolute_error, mean_squared_log_error
+# Feature Processing
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import StandardScaler
 
 
 def show_sales_relation(merged_df):
@@ -104,3 +109,77 @@ def check_sales_relation(merged_df):
     print(f"Correlation between Sales and Promotions: {corr_sales_promotions}")
     print(f"Correlation between Sales and Oil Prices: {corr_sales_oil}")
     print(f"Correlation between Sales and Holidays: {corr_sales_holidays}")
+
+
+def extract_date(merged_df):
+    # Extracting Date Components
+    # Create a copy of the merged dataset
+    merged_df_copy = merged_df.copy()
+    merged_df_copy['date'] = pd.to_datetime(merged_df_copy['date'])
+    merged_df_copy['year'] = merged_df_copy['date'].dt.year
+    merged_df_copy['month'] = merged_df_copy['date'].dt.month
+    merged_df_copy['day'] = merged_df_copy['date'].dt.day
+    print(merged_df_copy.head())
+    columns_to_drop = ['date', 'id', 'locale', 'locale_name', 'description', 'store_type', 'transferred', 'state']
+    merged_df_copy = merged_df_copy.drop(columns=columns_to_drop)
+    unique_families = merged_df_copy['family'].unique()
+    print(unique_families)
+
+    return merged_df_copy
+
+
+def reset_category(merged_df_copy):
+    # Define the category lists for each product category
+    food_families = ['BEVERAGES', 'BREAD/BAKERY', 'FROZEN FOODS', 'MEATS', 'PREPARED FOODS', 'DELI','PRODUCE', 'DAIRY','POULTRY','EGGS','SEAFOOD']
+    home_families = ['HOME AND KITCHEN I', 'HOME AND KITCHEN II', 'HOME APPLIANCES']
+    clothing_families = ['LINGERIE', 'LADYSWARE']
+    grocery_families = ['GROCERY I', 'GROCERY II']
+    stationery_families = ['BOOKS', 'MAGAZINES','SCHOOL AND OFFICE SUPPLIES']
+    cleaning_families = ['HOME CARE', 'BABY CARE','PERSONAL CARE']
+    hardware_families = ['PLAYERS AND ELECTRONICS','HARDWARE']
+
+    # Categorize the 'family' column based on the product categories
+    merged_df_copy['family'] = np.where(merged_df_copy['family'].isin(food_families), 'FOODS', merged_df_copy['family'])
+    merged_df_copy['family'] = np.where(merged_df_copy['family'].isin(home_families), 'HOME', merged_df_copy['family'])
+    merged_df_copy['family'] = np.where(merged_df_copy['family'].isin(clothing_families), 'CLOTHING', merged_df_copy['family'])
+    merged_df_copy['family'] = np.where(merged_df_copy['family'].isin(grocery_families), 'GROCERY', merged_df_copy['family'])
+    merged_df_copy['family'] = np.where(merged_df_copy['family'].isin(stationery_families), 'STATIONERY', merged_df_copy['family'])
+    merged_df_copy['family'] = np.where(merged_df_copy['family'].isin(cleaning_families), 'CLEANING', merged_df_copy['family'])
+    merged_df_copy['family'] = np.where(merged_df_copy['family'].isin(hardware_families), 'HARDWARE', merged_df_copy['family'])
+
+    # Print the updated unique values
+    unique_families = merged_df_copy['family'].unique()
+    print(unique_families)
+
+
+def feature_scaling(merged_df_copy):
+    scaler = StandardScaler()
+    num_cols = ['sales', 'transactions', 'dcoilwtico']
+    merged_df_copy[num_cols] = scaler.fit_transform(merged_df_copy[num_cols])
+
+
+def one_hot_encoding(merged_df_copy):
+    # Define the categorical columns to encode
+    categorical_columns = ["family", "city", "holiday_type"]
+
+    # Perform one-hot encoding
+    encoder = OneHotEncoder()
+    one_hot_encoded_data = encoder.fit_transform(merged_df_copy[categorical_columns])
+
+    # Create column names for the one-hot encoded data
+    column_names = encoder.get_feature_names_out(categorical_columns)
+
+    # Convert the one-hot encoded data to a DataFrame
+    merged_df_encoded = pd.DataFrame(one_hot_encoded_data.toarray(), columns=column_names)
+
+    # Concatenate the original dataframe with the one-hot encoded data
+    merged_df_encoded = pd.concat([merged_df_copy, merged_df_encoded], axis=1)
+
+    # Drop the original categorical columns
+    merged_df_encoded.drop(categorical_columns, axis=1, inplace=True)
+
+    # Print the head of the encoded DataFrame
+    print(merged_df_encoded.head())
+
+    return merged_df_encoded
+

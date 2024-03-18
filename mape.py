@@ -121,7 +121,6 @@ if __name__ == "__main__":
     linear_model = linear.fit(x_train,y_train)
     # predic test data
     predictions = linear_model.predict(x_test)
-    predictions = [ i if i>0 else 0 for i in predictions]
     # estimate the RMSLE of prediction
     print("Valid RMSLE:", mean_squared_log_error(predictions,y_test)**0.5)
 
@@ -132,7 +131,6 @@ if __name__ == "__main__":
     sample_submission = sample_submission.drop(columns=['date','store_nbr','family','onpromotion'])
     print(sample_submission.shape)
     print(sample_submission.head())
-    res = [ i if i>0 else 0 for i in res]
     sample_submission['sales'] = res
     sample_submission.to_csv('./submission.csv',index=False)
 

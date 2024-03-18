@@ -7,7 +7,8 @@
 # from sklearn.model_selection import train_test_split
 # from sklearn.metrics import mean_absolute_error
 from preprocess import merge_df
-from data_mining import visualize_df, stationary_test, t_test, check_sales_dates, check_sales_relation
+from data_mining import visualize_df, stationary_test, t_test, check_sales_dates, check_sales_relation, extract_date, reset_category, feature_scaling, one_hot_encoding
+from data_modeling import split_dataset, data_seperation, linear_regression
 # from sklearn.feature_selection import SelectKBest
 # from sklearn.feature_selection import f_regression
 
@@ -19,7 +20,14 @@ if __name__ == "__main__":
     # stationary_test(merged_df)
     # t_test(merged_df)
     # check_sales_dates(merged_df)
-    check_sales_relation(merged_df)
+    # check_sales_relation(merged_df)
+    merged_df_copy = extract_date(merged_df)
+    reset_category(merged_df_copy)
+    feature_scaling(merged_df_copy)
+    merged_df_encoded = one_hot_encoding(merged_df_copy)
+    train_set, valid_set = split_dataset(merged_df_encoded)
+    x_train, y_train, x_valid, y_valid, result_df = data_seperation(train_set,valid_set)
+    linear_regression(x_train,y_train,x_valid,y_valid)
 
     # df_train_new,df_test_new = prework(df_train_new,df_test_new)
     # print(f"{'-'*10} df_train_new {'-'*10}")
