@@ -1,7 +1,6 @@
-# import numpy as np
 import pandas as pd
-# import os
 import matplotlib.pyplot as plt
+
 
 def draw(x,y):
     fig = plt.figure()
@@ -9,11 +8,13 @@ def draw(x,y):
     axes.plot(x,y)
     plt.show()
 
-def show_missing_values(datasets):
-    for df_name, data in datasets.items():
+
+def show_missing_values(dataframe):
+    for df_name, data in dataframe.items():
         print('=' * 30)
         print(f"Check missing values of {df_name} dataset:")
         print(data.isnull().sum())
+
 
 def check_dates(dataframe):
     min_date = dataframe['date'].min()
@@ -27,6 +28,7 @@ def check_dates(dataframe):
         print(missing_dates)
     # The date data is incomplete. missing dates:
     # DatetimeIndex(['2013-12-25', '2014-12-25', '2015-12-25', '2016-12-25'], dtype='datetime64[ns]', freq=None)
+
 
 def insert_dates(dataframe):
     min_date = dataframe['date'].min()
@@ -44,10 +46,12 @@ def insert_dates(dataframe):
 
     return dataframe
 
-def read_df():
-    df_oil = pd.read_csv('data/train/oil.csv')
+
+def merge_df():
+
     df_train = pd.read_csv("data/train/train.csv")
     df_test = pd.read_csv("data/test/test.csv")
+    df_oil = pd.read_csv('data/train/oil.csv')
     df_holidays_events = pd.read_csv("data/train/holidays_events.csv")
     df_stores = pd.read_csv("data/train/stores.csv")
     df_transactions = pd.read_csv("data/train/transactions.csv")
@@ -57,9 +61,9 @@ def read_df():
     show_missing_values(datasets_1)
 
     # fill df_oil missing data
-    # draw(df_oil['date'],df_oil['dcoilwtico'])
+    draw(df_oil['date'],df_oil['dcoilwtico'])
     df_oil = df_oil.fillna(method="backfill")
-    # draw(df_oil['date'],df_oil['dcoilwtico'])
+    draw(df_oil['date'],df_oil['dcoilwtico'])
 
     # Converting the 'date' column in the datasets to datetime format
     datasets_2 = {'train': df_train, 'test': df_test, 'holiday events': df_holidays_events, 'oil': df_oil, 'stores': df_stores, 'transactions': df_transactions}
@@ -74,127 +78,31 @@ def read_df():
     df_train = insert_dates(df_train)
     check_dates(df_train)
 
+   # rename the type column
     df_holidays_events.rename(columns={'type':'holiday_type'},inplace=True)
     df_stores.rename(columns={'type':'store_type'},inplace=True)
-
+    # merge train dataframe
     merged_df = df_train.merge(df_stores,on='store_nbr',how='inner')
     merged_df = merged_df.merge(df_transactions,on=['date','store_nbr'],how='inner')
     merged_df = merged_df.merge(df_holidays_events,on='date',how='inner')
     merged_df = merged_df.merge(df_oil,on='date',how='inner')
+
+    datasets_3 = {'merged_df': merged_df, 'test': df_test}
+    show_missing_values(datasets_3)
     print(f"merged train df shape:{merged_df.shape}")
+    print(merged_df.head())
+    print()
     print(f"merged test df shape:{df_test.shape}")
+    print(df_test.head())
+    print()
+    print(merged_df.describe().T)
 
-    return merged_df, df_test
+    merged_df.to_csv('data/train/merged_df.csv',index=False)
+    df_test.to_csv('data/test/df_test.csv',index=False)
 
-def merge_df():
-    # train data
-    df_train_new = pd.merge(df_train,df_oil_fill,how='left',on='date')
-    # draw(df_train_new['date'],df_train_new['dcoilwtico'])
-    df_train_new = df_train_new.fillna(method='pad')
-    # draw(df_train_new['date'],df_train_new['dcoilwtico'])
-    df_train_new = pd.merge(df_train_new,df_holidays_events,how='left',on='date')
-    # print(df_train_new.isna().sum())
-    df_train_new = df_train_new.fillna("Empty")
-    # print(df_train_new.isna().sum())
-    # df_train_new.info(show_counts=True)
-    df_train_new = pd.merge(df_train_new,df_stores,how='left',on='store_nbr')
-    # print(df_train_new.isna().sum())
-    df_train_new = pd.merge(df_train_new,df_transactions,how='left',on=['date','store_nbr'])
-    # print(df_train_new.isna().sum())
-    df_train_new['transactions'] = df_train_new['transactions'].fillna(0)
-    # print(df_train_new.isna().sum())
-    df_train_new['date'] = df_train_new['date'].astype('datetime64[ns]')
-    df_train_new['date'].dtype
-    print("="*10,"train data","="*10)
-    print(df_train_new.isna().sum())
-    df_train_new.head()
-
-    # test data
-    print("="*10,"test data","="*10)
-    df_test_new = pd.merge(df_test,df_oil_fill,how='left',on='date')
-    # print(df_test_new.isna().sum())
-    # draw(df_test_new['date'],df_test_new['dcoilwtico'])
-    df_test_new = df_test_new.fillna(method='backfill')
-    # draw(df_test_new['date'],df_test_new['dcoilwtico'])
-    # print(df_test_new.isna().sum())
-    df_test_new = pd.merge(df_test_new,df_holidays_events,how='left',on='date')
-    df_test_new = df_test_new.fillna("Empty")
-    
-    df_test_new = pd.merge(df_test_new,df_stores,how='left',left_on='store_nbr',right_on='store_nbr')
-    df_test_new = pd.merge(df_test_new,df_transactions,how='left',on=['date','store_nbr'])
-    df_test_new['transactions'] = df_test_new['transactions'].fillna(0)
-    df_test_new['date'] = df_test_new['date'].astype('datetime64[ns]')
-    df_test_new['date'].dtype
-    print(df_test_new.isna().sum())
-
-    return df_train_new, df_test_new
-
-
-def check_na(df):
-    print(f"length: {len(df)}")
-    for i in df.columns:
-        a = df[i].describe()
-        print(f"Name: {i} Rate: {100*a['count']/len(df[i])}")
-
-
-def split_date(df):
-    df['year'] = df['date'].dt.year
-    df['month'] = df['date'].dt.month
-    df['day'] = df['date'].dt.day
-    df['weekday'] = df['date'].dt.weekday
-    df.loc[df['weekday'] < 5,'weekend'] = 0
-    df.loc[df['weekday'] >= 5,'weekend'] = 1
-    return df
-
-
-def holiday(df):
-    df['is_holiday'] = 0
-    df.loc[df.weekday > 4 , 'is_holiday'] = 1
-    df.loc[df['holiday_type'] == 'Work Day', 'is_holiday'] = 0
-    df.loc[df['holiday_type'] == 'Transfer', 'is_holiday'] = 1
-    df.loc[df['holiday_type'] == 'Bridge', 'is_holiday'] = 1
-    df.loc[(df['holiday_type'] == 'Holiday') & (df.transferred == False), 'is_holiday'] = 1
-    df.loc[(df['holiday_type'] == 'Holiday') & (df.transferred == True), 'is_holiday'] = 0
-    df = df.drop(columns=['holiday_type','description','transferred'])
-    return df
-
-def prework(df_train_new,df_test_new):
-    # df_train_new.drop_duplicates(subset='id',keep='first',inplace=True)
-    # df_train_new.dropna(axis=0,inplace=True)
-    # df_train_new['date'] = df_train_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
-
-    df_train_new['family'] = pd.factorize(df_train_new['family'])[0].astype(int)
-    df_train_new['holiday_type'] = pd.factorize(df_train_new['holiday_type'])[0].astype(int)
-    df_train_new['locale'] = pd.factorize(df_train_new['locale'])[0].astype(int)
-    df_train_new['locale_name'] = pd.factorize(df_train_new['locale_name'])[0].astype(int)
-    df_train_new['description'] = pd.factorize(df_train_new['description'])[0].astype(int)
-    df_train_new['transferred'] = pd.factorize(df_train_new['transferred'])[0].astype(int)
-    df_train_new['city'] = pd.factorize(df_train_new['city'])[0].astype(int)
-    df_train_new['state'] = pd.factorize(df_train_new['state'])[0].astype(int)
-    df_train_new['store_type'] = pd.factorize(df_train_new['store_type'])[0].astype(int)
-
-    # df_test_new.drop_duplicates(subset='id',keep='first',inplace=True)
-    # df_test_new.dropna(axis=0,inplace=True)
-    # df_test_new['date'] = df_test_new['date'].apply(lambda X: int(str(X).split('-')[0] + str(X).split('-')[1] + str(X).split('-')[2]))
-    df_test_new['family'] = pd.factorize(df_test_new['family'])[0].astype(int)
-    df_test_new['holiday_type'] = pd.factorize(df_test_new['holiday_type'])[0].astype(int)
-    df_test_new['locale'] = pd.factorize(df_test_new['locale'])[0].astype(int)
-    df_test_new['locale_name'] = pd.factorize(df_test_new['locale_name'])[0].astype(int)
-    df_test_new['description'] = pd.factorize(df_test_new['description'])[0].astype(int)
-    df_test_new['transferred'] = pd.factorize(df_test_new['transferred'])[0].astype(int)
-    df_test_new['city'] = pd.factorize(df_test_new['city'])[0].astype(int)
-    df_test_new['state'] = pd.factorize(df_test_new['state'])[0].astype(int)
-    df_test_new['store_type'] = pd.factorize(df_test_new['store_type'])[0].astype(int)
-
-    return df_train_new, df_test_new
+    return merged_df, df_test, df_oil, df_holidays_events, df_stores, df_transactions
 
 
 if __name__ == "__main__":
-    print(f"{'-'*10} start {'-'*10}")
-    df_train_new,df_test_new = read_df()
-    # df_train_new,df_test_new = prework(df_train_new,df_test_new)
-    # print(f"{'-'*10} df_train_new {'-'*10}")
-    # check_na(df_train_new)
-    # print(f"{'-'*10} df_test_new {'-'*10}")
-    # check_na(df_test_new)
-    # print("done!")
+    merged_df, df_test, df_oil, df_holidays_events, df_stores, df_transactions = merge_df()
+

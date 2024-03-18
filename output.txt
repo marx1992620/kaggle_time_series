@@ -115,52 +115,36 @@ top     2014-06-25  Holiday  National     Ecuador    Carnaval       False
 freq             4      221       174         174          10         338
 
 
------------ df_train_new -----------
-length: 3054348
-Name: id Rate: 100.0
-Name: date Rate: 100.0
-Name: store_nbr Rate: 100.0
-Name: family Rate: 100.0
-Name: sales Rate: 100.0
-Name: onpromotion Rate: 100.0
-Name: Daily_holiday_type Rate: 16.45274212368728
-Name: Daily_holiday_locale Rate: 16.45274212368728
-Name: Daily_holiday_locale_name Rate: 16.45274212368728
-Name: Daily_holiday_description Rate: 16.45274212368728
-Name: Daily_holiday_transferred Rate: 16.45274212368728
-Name: dcoilwtico Rate: 71.17852975495916
-Name: store_city Rate: 100.0
-Name: store_state Rate: 100.0
-Name: store_type Rate: 100.0
-Name: store_cluster Rate: 100.0
-Name: transactions Rate: 91.84385669216475
------------ df_test_new ------------
-length: 28512
-Name: id Rate: 100.0
-Name: date Rate: 100.0
-Name: store_nbr Rate: 100.0
-Name: family Rate: 100.0
-Name: onpromotion Rate: 100.0
-Name: Daily_holiday_type Rate: 6.25
-Name: Daily_holiday_locale Rate: 6.25
-Name: Daily_holiday_locale_name Rate: 6.25
-Name: Daily_holiday_description Rate: 6.25
-Name: Daily_holiday_transferred Rate: 6.25
-Name: dcoilwtico Rate: 75.0
-Name: store_city Rate: 100.0
-Name: store_state Rate: 100.0
-Name: store_type Rate: 100.0
-Name: store_cluster Rate: 100.0
-Name: transactions Rate: 0.0
+merged train df shape:(322047, 17)
+        id       date  store_nbr            family  sales  onpromotion   city      state store_type  cluster  transactions holiday_type    locale locale_name description  transferred  dcoilwtico
+0  73062.0 2013-02-11        1.0        AUTOMOTIVE    0.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01
+1  73085.0 2013-02-11        1.0         MAGAZINES    0.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01
+2  73084.0 2013-02-11        1.0  LIQUOR,WINE,BEER   21.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01
+3  73083.0 2013-02-11        1.0          LINGERIE    0.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01
+4  73082.0 2013-02-11        1.0   LAWN AND GARDEN    3.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01
+merged test df shape:(28512, 5)
+        id       date  store_nbr      family  onpromotion
+0  3000888 2017-08-16          1  AUTOMOTIVE            0
+1  3000889 2017-08-16          1   BABY CARE            0
+2  3000890 2017-08-16          1      BEAUTY            2
+3  3000891 2017-08-16          1   BEVERAGES           20
+4  3000892 2017-08-16          1       BOOKS            0
 
+                 count                           mean                  min                  25%                  50%                  75%                  max            std
+id            322047.0                 1682979.459576                561.0            1010616.5            1842406.0            2209555.5            3000887.0  786249.257767
+date            322047  2015-08-04 23:49:57.971103488  2013-01-01 00:00:00  2014-07-23 00:00:00  2015-11-02 00:00:00  2016-05-27 00:00:00  2017-08-15 00:00:00            NaN
+store_nbr     322047.0                      26.994672                  1.0                 13.0                 27.0                 40.0                 54.0      15.595174
+sales         322047.0                     406.383452                  0.0                  1.0                 19.0           241.260505             124717.0     1246.88124
+onpromotion   322047.0                       3.727136                  0.0                  0.0                  0.0                  1.0                716.0      15.512095
+cluster       322047.0                       8.531202                  1.0                  4.0                  9.0                 13.0                 17.0       4.713809
+transactions  322047.0                     1734.11784                 54.0               1030.0               1409.0               2148.0               8359.0    1050.335018
+dcoilwtico    322047.0                      63.636381                27.96                44.88                51.98                94.09               107.95      24.855753
 
+Check missing values of test dataset:
+id             0
+date           0
+store_nbr      0
+family         0
+onpromotion    0
+dtype: int64
 
-The train dataset is incomplete. The following dates are missing:
-DatetimeIndex(['2013-01-05', '2013-01-06', '2013-01-12', '2013-01-13',
-               '2013-01-19', '2013-01-20', '2013-01-26', '2013-01-27',
-               '2013-02-02', '2013-02-03',
-               ...
-               '2017-07-29', '2017-07-30', '2017-08-05', '2017-08-06',
-               '2017-08-12', '2017-08-13', '2017-08-19', '2017-08-20',
-               '2017-08-26', '2017-08-27'],
-              dtype='datetime64[ns]', length=486, freq=None)
