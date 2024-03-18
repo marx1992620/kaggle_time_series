@@ -58,19 +58,19 @@ def merge_df():
 
     # Check for missing values in the datasets
     datasets_1 = {'train': df_train, 'test': df_test, 'holiday events': df_holidays_events, 'oil': df_oil, 'stores': df_stores, 'transactions': df_transactions}
-    show_missing_values(datasets_1)
+    # show_missing_values(datasets_1)
 
     # fill df_oil missing data
-    draw(df_oil['date'],df_oil['dcoilwtico'])
+    # draw(df_oil['date'],df_oil['dcoilwtico'])
     df_oil = df_oil.fillna(method="backfill")
-    draw(df_oil['date'],df_oil['dcoilwtico'])
+    # draw(df_oil['date'],df_oil['dcoilwtico'])
 
     # Converting the 'date' column in the datasets to datetime format
     datasets_2 = {'train': df_train, 'test': df_test, 'holiday events': df_holidays_events, 'oil': df_oil, 'stores': df_stores, 'transactions': df_transactions}
     for df_name, dataframe in datasets_2.items():
         if 'date' in dataframe.columns:
             dataframe['date'] = pd.to_datetime(dataframe['date'])
-            print(f"{df_name} date: {dataframe['date'].dtype}")
+            # print(f"{df_name} date: {dataframe['date'].dtype}")
 
     # check date data
     check_dates(df_train)
@@ -88,14 +88,14 @@ def merge_df():
     merged_df = merged_df.merge(df_oil,on='date',how='inner')
 
     datasets_3 = {'merged_df': merged_df, 'test': df_test}
-    show_missing_values(datasets_3)
-    print(f"merged train df shape:{merged_df.shape}")
-    print(merged_df.head())
-    print()
-    print(f"merged test df shape:{df_test.shape}")
-    print(df_test.head())
-    print()
-    print(merged_df.describe().T)
+    # show_missing_values(datasets_3)
+    # print(f"merged train df shape:{merged_df.shape}")
+    # print(merged_df.head())
+    # print()
+    # print(f"merged test df shape:{df_test.shape}")
+    # print(df_test.head())
+    # print()
+    # print(merged_df.describe().T)
 
     merged_df.to_csv('data/train/merged_df.csv',index=False)
     df_test.to_csv('data/test/df_test.csv',index=False)
