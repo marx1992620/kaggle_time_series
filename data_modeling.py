@@ -11,7 +11,7 @@ import pickle
 
 
 def split_dataset(merged_df_encoded):
-    columns_to_drop = ['holiday_type_Additional', 'holiday_type_Bridge', 'holiday_type_Event', 'holiday_type_Transfer']
+    columns_to_drop = ['holiday_type_Holiday','holiday_type_Additional', 'holiday_type_Bridge', 'holiday_type_Event', 'holiday_type_Transfer']
     merged_df_encoded = merged_df_encoded.drop(columns=columns_to_drop)
     train_set = merged_df_encoded.loc[merged_df_encoded['year'].isin([2013, 2014, 2015, 2016])]
     valid_set = merged_df_encoded.loc[merged_df_encoded['year'] == 2017]

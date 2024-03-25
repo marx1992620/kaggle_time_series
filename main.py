@@ -25,7 +25,7 @@ if __name__ == "__main__":
     reset_category(x_test)
     feature_scaling(x_test)
     x_test_encoded = one_hot_encoding(x_test)
-    x_test_encoded.drop(['holiday_type_nan'], axis=1, inplace=True)
+    x_test_encoded.drop(['holiday_type_nan','holiday_type_Holiday'], axis=1, inplace=True)
     x_test_encoded = x_test_encoded.fillna(0)
     # x_test_encoded.insert(45, 'holiday_type_Transfer', 0)
     # x_test_encoded.insert(44, 'holiday_type_Event', 0)

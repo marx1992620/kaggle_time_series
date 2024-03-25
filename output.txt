@@ -215,5 +215,5 @@ Index(['store_nbr', 'onpromotion', 'cluster', 'transactions', 'dcoilwtico',
        'city_Guayaquil', 'city_Ibarra', 'city_Latacunga', 'city_Libertad',
        'city_Loja', 'city_Machala', 'city_Manta', 'city_Playas', 'city_Puyo',
        'city_Quevedo', 'city_Quito', 'city_Riobamba', 'city_Salinas',
-       'city_Santo Domingo', 'holiday_type_Holiday', 'holiday_type_nan'],
+       'city_Santo Domingo', 'holiday_type_Holiday'],
       dtype='object')

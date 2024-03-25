@@ -124,9 +124,11 @@ if __name__ == "__main__":
     # estimate the RMSLE of prediction
     # print("Valid RMSLE:", mean_squared_log_error(predictions,y_test)**0.5)
     # Calculate the Root Mean Squared Logarithmic Error (RMSLE) & metrics
+    y_test_abs = abs(y_test)
+    linear_predictions_abs = abs(predictions)
     linear_mse = mean_squared_error(y_test, predictions)
     linear_mae = mean_absolute_error(y_test, predictions)
-    linear_rmsle = (mean_squared_log_error(y_test, abs(predictions))**0.5)
+    linear_rmsle = (mean_squared_log_error(y_test_abs, abs(linear_predictions_abs))**0.5)
 
     # Create a DataFrame to store results for Linear Regression
     results = pd.DataFrame({'Model': ['Linear Regression'],
