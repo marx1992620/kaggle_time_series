@@ -120,12 +120,23 @@ def extract_date(merged_df):
     merged_df_copy['month'] = merged_df_copy['date'].dt.month
     merged_df_copy['day'] = merged_df_copy['date'].dt.day
     print(merged_df_copy.head())
-    columns_to_drop = ['date', 'id', 'locale', 'locale_name', 'description', 'store_type', 'transferred', 'state']
+    columns_to_drop = ['date', 'locale', 'locale_name', 'description', 'store_type', 'transferred', 'state']
     merged_df_copy = merged_df_copy.drop(columns=columns_to_drop)
     unique_families = merged_df_copy['family'].unique()
     print(unique_families)
 
-    return merged_df_copy
+    x_test = pd.read_csv("data/test/df_test.csv")
+    x_test['date'] = pd.to_datetime(x_test['date'])
+    x_test['year'] = x_test['date'].dt.year
+    x_test['month'] = x_test['date'].dt.month
+    x_test['day'] = x_test['date'].dt.day
+    x_test = x_test.drop(columns=columns_to_drop)
+    # unique_families = x_test['family'].unique()
+    # print("/*"*30)
+    # print(unique_families)
+    # x_test.to_csv('data/test/x_test.csv')
+
+    return merged_df_copy,x_test
 
 
 def reset_category(merged_df_copy):
@@ -154,7 +165,10 @@ def reset_category(merged_df_copy):
 
 def feature_scaling(merged_df_copy):
     scaler = StandardScaler()
-    num_cols = ['sales', 'transactions', 'dcoilwtico']
+    if 'sales' not in list(merged_df_copy.columns):
+        num_cols = ['transactions', 'dcoilwtico']
+    else:
+        num_cols = ['sales', 'transactions', 'dcoilwtico']
     merged_df_copy[num_cols] = scaler.fit_transform(merged_df_copy[num_cols])
 
 

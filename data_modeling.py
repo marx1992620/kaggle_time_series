@@ -11,6 +11,8 @@ import pickle
 
 
 def split_dataset(merged_df_encoded):
+    columns_to_drop = ['holiday_type_Additional', 'holiday_type_Bridge', 'holiday_type_Event', 'holiday_type_Transfer']
+    merged_df_encoded = merged_df_encoded.drop(columns=columns_to_drop)
     train_set = merged_df_encoded.loc[merged_df_encoded['year'].isin([2013, 2014, 2015, 2016])]
     valid_set = merged_df_encoded.loc[merged_df_encoded['year'] == 2017]
     print(train_set.shape)
@@ -21,10 +23,10 @@ def split_dataset(merged_df_encoded):
 
 def data_seperation(train_set,valid_set):
     # For the training set
-    x_train = train_set.drop('sales', axis=1)
+    x_train = train_set.drop(['id','sales'], axis=1)
     y_train = train_set['sales']
     # For the evaluation set
-    x_valid = valid_set.drop('sales', axis=1)
+    x_valid = valid_set.drop(['id','sales'], axis=1)
     y_valid = valid_set['sales']
 
     # Initialize the results dataframe
@@ -58,10 +60,13 @@ def linear_regression(x_train,y_train,x_valid,y_valid):
 
     # Print the results dataframe
     print(results)
-    x_test = pd.read_csv("data/test/df_test.csv")
-    res = linear_model.predict(x_test)
-    print(len(res))
 
+    x_test = pd.read_csv("data/test/x_test.csv")
+    x_test2 = x_test.drop('id', axis=1)
+    print("+-"*30)
+    print(x_test2.columns)
+    print(x_test2.head())
+    res = linear_model.predict(x_test2)
 
-    test_results = pd.DataFrame({'sales': res})
+    test_results = pd.DataFrame({'id':x_test['id'],'sales': res})
     test_results.to_csv('./submission_2.csv',index=False)

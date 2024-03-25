@@ -115,17 +115,32 @@ if __name__ == "__main__":
     x_train, x_test , y_train, y_test = train_test_split(filter_train_data_without_sales,target,test_size=0.2)
 
     from sklearn.linear_model import LinearRegression
-    from sklearn.metrics import mean_squared_log_error
+    from sklearn.metrics import mean_squared_log_error,mean_squared_error
     linear = LinearRegression()
     # model
     linear_model = linear.fit(x_train,y_train)
     # predic test data
     predictions = linear_model.predict(x_test)
     # estimate the RMSLE of prediction
-    print("Valid RMSLE:", mean_squared_log_error(predictions,y_test)**0.5)
+    # print("Valid RMSLE:", mean_squared_log_error(predictions,y_test)**0.5)
+    # Calculate the Root Mean Squared Logarithmic Error (RMSLE) & metrics
+    linear_mse = mean_squared_error(y_test, predictions)
+    linear_mae = mean_absolute_error(y_test, predictions)
+    linear_rmsle = (mean_squared_log_error(y_test, abs(predictions))**0.5)
 
+    # Create a DataFrame to store results for Linear Regression
+    results = pd.DataFrame({'Model': ['Linear Regression'],
+                                'RMSLE': [linear_rmsle],
+                                'RMSE': [(linear_mse)**0.5],
+                                'MSE': [linear_mse],
+                                'MAE': [linear_mae]}).round(2)
+
+    # Print the results dataframe
+    print(results)
+    print("-*"*30)
+    print(filter_test_data.head())
     res = linear_model.predict(filter_test_data)
-    print(len(res))
+
 
     sample_submission = pd.read_csv("data/test/test.csv")
     sample_submission = sample_submission.drop(columns=['date','store_nbr','family','onpromotion'])

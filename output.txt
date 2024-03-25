@@ -23,6 +23,10 @@ min    3.000888e+06      1.000000      0.000000
 75%    3.022271e+06     41.000000      6.000000
 max    3.029399e+06     54.000000    646.000000
 ================
+        id       date  store_nbr      family  onpromotion   city      state store_type  cluster  transactions holiday_type locale locale_name description transferred  dcoilwtico
+0  3000888 2017-08-16          1  AUTOMOTIVE            0  Quito  Pichincha          D       13           NaN          NaN    NaN         NaN         NaN         NaN        46.8
+1  3000889 2017-08-16          1   BABY CARE            0  Quito  Pichincha          D       13           NaN          NaN    NaN         NaN         NaN         NaN        46.8
+================
 
 train: (3000888, 6)
    id        date  store_nbr      family  sales  onpromotion
@@ -41,6 +45,10 @@ min    0.000000e+00  1.000000e+00  0.000000e+00  0.000000e+00
 50%    1.500444e+06  2.750000e+01  1.100000e+01  0.000000e+00
 75%    2.250665e+06  4.100000e+01  1.958473e+02  0.000000e+00
 max    3.000887e+06  5.400000e+01  1.247170e+05  7.410000e+02
+================
+        id       date  store_nbr            family  sales  onpromotion   city      state store_type  cluster  transactions holiday_type    locale locale_name description  transferred  dcoilwtico  year  month  day
+0  73062.0 2013-02-11        1.0        AUTOMOTIVE    0.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01  2013      2   11      
+1  73085.0 2013-02-11        1.0         MAGAZINES    0.0          0.0  Quito  Pichincha          D       13           396      Holiday  National     Ecuador    Carnaval        False       97.01  2013      2   11 
 ================
 
 oil: (1218, 2)
@@ -175,3 +183,37 @@ Reject the null hypothesis: The sales data is stationary.
 # LinearRegression
                Model  RMSLE  RMSE   MSE   MAE
 0  Linear Regression   0.27  0.84  0.71  0.37
+
+# x_train
+Index(['store_nbr', 'onpromotion', 'cluster', 'transactions', 'dcoilwtico',
+       'year', 'month', 'day', 'family_AUTOMOTIVE', 'family_BEAUTY',
+       'family_CELEBRATION', 'family_CLEANING', 'family_CLOTHING',
+       'family_FOODS', 'family_GROCERY', 'family_HARDWARE', 'family_HOME',
+       'family_LADIESWEAR', 'family_LAWN AND GARDEN',
+       'family_LIQUOR,WINE,BEER', 'family_PET SUPPLIES', 'family_STATIONERY',
+       'city_Ambato', 'city_Babahoyo', 'city_Cayambe', 'city_Cuenca',
+       'city_Daule', 'city_El Carmen', 'city_Esmeraldas', 'city_Guaranda',
+       'city_Guayaquil', 'city_Ibarra', 'city_Latacunga', 'city_Libertad',
+       'city_Loja', 'city_Machala', 'city_Manta', 'city_Playas', 'city_Puyo',
+       'city_Quevedo', 'city_Quito', 'city_Riobamba', 'city_Salinas',
+       'city_Santo Domingo', 'holiday_type_Additional', 'holiday_type_Bridge',
+       'holiday_type_Event', 'holiday_type_Holiday', 'holiday_type_Transfer'],
+      dtype='object')
+
+
+# x_test
+    store_nbr  onpromotion  cluster  transactions  dcoilwtico  year  month  day  ...  city_Puyo  city_Quevedo  city_Quito  city_Riobamba  city_Salinas  city_Santo Domingo  holiday_type_Holiday  holiday_type_nan
+0          1            0       13           NaN    -0.58805  2017      8   16  ...        0.0           0.0         1.0            0.0           0.0                 0.0                   0.0               1.0
+Index(['store_nbr', 'onpromotion', 'cluster', 'transactions', 'dcoilwtico',
+       'year', 'month', 'day', 'family_AUTOMOTIVE', 'family_BEAUTY',
+       'family_CELEBRATION', 'family_CLEANING', 'family_CLOTHING',
+       'family_FOODS', 'family_GROCERY', 'family_HARDWARE', 'family_HOME',
+       'family_LADIESWEAR', 'family_LAWN AND GARDEN',
+       'family_LIQUOR,WINE,BEER', 'family_PET SUPPLIES', 'family_STATIONERY',
+       'city_Ambato', 'city_Babahoyo', 'city_Cayambe', 'city_Cuenca',
+       'city_Daule', 'city_El Carmen', 'city_Esmeraldas', 'city_Guaranda',
+       'city_Guayaquil', 'city_Ibarra', 'city_Latacunga', 'city_Libertad',
+       'city_Loja', 'city_Machala', 'city_Manta', 'city_Playas', 'city_Puyo',
+       'city_Quevedo', 'city_Quito', 'city_Riobamba', 'city_Salinas',
+       'city_Santo Domingo', 'holiday_type_Holiday', 'holiday_type_nan'],
+      dtype='object')

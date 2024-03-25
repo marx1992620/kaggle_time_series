@@ -87,18 +87,30 @@ def merge_df():
     merged_df = merged_df.merge(df_holidays_events,on='date',how='inner')
     merged_df = merged_df.merge(df_oil,on='date',how='inner')
 
+    # merge test dataframe
+    merged_df_test = df_test.merge(df_stores,on='store_nbr',how='left')
+    merged_df_test = merged_df_test.merge(df_transactions,on=['date','store_nbr'],how='left')
+    merged_df_test = merged_df_test.merge(df_holidays_events,on='date',how='left')
+    merged_df_test = merged_df_test.merge(df_oil,on='date',how='left')
+    merged_df_test['transactions'] = merged_df_test['transactions'].fillna(0)
+    # draw(merged_df_test['date'],merged_df_test['dcoilwtico'])
+    merged_df_test['dcoilwtico'] = merged_df_test['dcoilwtico'].fillna(method="backfill")
+    # merged_df_test = merged_df_test.fillna(0)
+    # draw(merged_df_test['date'],merged_df_test['dcoilwtico'])
+    # show_missing_values(merged_df_test)
+    
     datasets_3 = {'merged_df': merged_df, 'test': df_test}
     # show_missing_values(datasets_3)
-    # print(f"merged train df shape:{merged_df.shape}")
+    print(f"merged train df shape:{merged_df.shape}")
     # print(merged_df.head())
     # print()
-    # print(f"merged test df shape:{df_test.shape}")
+    print(f"merged test df shape:{merged_df_test.shape}")
     # print(df_test.head())
     # print()
     # print(merged_df.describe().T)
 
     merged_df.to_csv('data/train/merged_df.csv',index=False)
-    df_test.to_csv('data/test/df_test.csv',index=False)
+    merged_df_test.to_csv('data/test/df_test.csv',index=False)
 
     return merged_df, df_test, df_oil, df_holidays_events, df_stores, df_transactions
 
